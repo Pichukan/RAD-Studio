@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<codetemplate xmlns="http://schemas.borland.com/Delphi/2005/codetemplates" version="1.0.0">
+
+  <template name="csn" invoke="manual">
+    <description>
+      CodeSite.EnterMethod(...)
+    </description>
+    <author>
+      Raize Software
+    </author>
+
+    <point name="method">
+      <text>
+        method
+      </text>
+      <hint>
+        Method Name
+      </hint>
+    </point>
+
+    <code language="C" context="methodbody">
+      <![CDATA[CodeSite->EnterMethod( this, "$method$" );$end$ ]]>
+    </code>
+  </template>
+</codetemplate>

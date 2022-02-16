@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<codetemplate xmlns="http://schemas.borland.com/Delphi/2005/codetemplates" version="1.0.0">
+
+  <template name="cs7" invoke="manual">
+    <description>
+      CodeSite.Send( csmLevel7, ... ) // Violet
+    </description>
+    <author>
+      Raize Software
+    </author>
+
+    <point name="data">
+      <text>
+        data
+      </text>
+      <hint>
+        Variable, Field, Object, etc.
+      </hint>
+    </point>
+
+    <code language="C" context="methodbody">
+      <![CDATA[CodeSite->Send( csmLevel7, "$data$", $data$ );$end$ ]]>
+    </code>
+  </template>
+</codetemplate>

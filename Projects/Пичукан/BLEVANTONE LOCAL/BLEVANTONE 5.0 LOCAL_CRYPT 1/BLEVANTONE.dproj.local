@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.470,=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE\BLEVANTONE итоговый\BLEVANTONE 5 Запуск и открытие 16 WORD+EXCEL 25032015\WORD activate\WordActivate.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.429,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE LOCAL\BLEVANTONE 5.0 LOCAL_CRYPT\CRYPT\CheckCrypt.dfm=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE LOCAL\BLEVANTONE 5.0 LOCAL_CRYPT\Unit2.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.390,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие WORD+EXCEL 24022015\WORD activate\WordActivate.dfm=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск EXCEL\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.555,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие WORD\Project2.dproj=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие WORD\Project2.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.846,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE LOCAL\BLEVANTONE 5.0 LOCAL_CRYPT continue\BLEVANTONE.dproj=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE LOCAL\BLEVANTONE 5.0 LOCAL_CRYPT\BLEVANTONE.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.020,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие 2 WORD+EXCEL 24022015\EXCEL activate\ExcelActivate.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.975,=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие WORD+EXCEL 24022015\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.501,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск EXCEL\Unit1.dfm=C:\Users\Андрей\Documents\RAD Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.114,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE LOCAL\BLEVANTONE 5.0 LOCAL_CRYPT\CRYPT\CheckCrypt.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.429,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE LOCAL\BLEVANTONE 5.0 LOCAL_CRYPT\CRYPT\CheckCrypt.pas=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE LOCAL\BLEVANTONE 5.0 LOCAL_CRYPT\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.508,=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE LOCAL\BLEVANTONE 5.0 LOCAL_CRYPT\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.390,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие WORD+EXCEL 24022015\WORD activate\WordActivate.pas=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск EXCEL\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.384,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие WORD+EXCEL 24022015\EXCEL activate\ExcelActivate.pas=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие WORD+EXCEL 24022015\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.988,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск WORD\Project2.dproj=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск EXCEL\Project2.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.648,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие 16 WORD+EXCEL 24032015\Project2.dproj=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\BLEVANTONE\BLEVANTONE.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.396,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск EXCEL\Project2.dproj=C:\Users\Андрей\Documents\RAD Studio\Projects\Project2.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.520,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск и открытие WORD\Project2.dproj=C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск WORD\Project2.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.686,=C:\Users\Андрей\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.501,C:\Users\Андрей\Documents\RAD Studio\Projects\Пичукан\Запуск EXCEL\Unit1.pas=C:\Users\Андрей\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.299,=C:\Users\Андрей\Documents\RAD Studio\Projects\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

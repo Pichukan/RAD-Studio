@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<codetemplate xmlns="http://schemas.borland.com/Delphi/2005/codetemplates" version="1.0.0">
+
+  <template name="csd" invoke="manual">
+    <description>
+      CodeSite.SendDateTime method call
+    </description>
+    <author>
+      Raize Software
+    </author>
+
+    <point name="datetime">
+      <text>
+        datetime
+      </text>
+      <hint>
+        TDateTime Variable, Field, Object, etc.
+      </hint>
+    </point>
+
+    <code language="Delphi" context="methodbody" delimiter="|">
+      <![CDATA[CodeSite.SendDateTime( '|datetime|', |datetime| );|end| ]]>
+    </code>
+  </template>
+</codetemplate>

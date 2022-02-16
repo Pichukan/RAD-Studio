@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<codetemplate xmlns="http://schemas.borland.com/Delphi/2005/codetemplates" version="1.0.0">
+
+  <template name="css" invoke="manual">
+    <description>
+      CodeSite.Send(...)
+    </description>
+    <author>
+      Raize Software
+    </author>
+
+    <point name="data">
+      <text>
+        data
+      </text>
+      <hint>
+        Variable, Field, Object, etc.
+      </hint>
+    </point>
+
+    <code language="Delphi" context="methodbody" delimiter="|">
+      <![CDATA[CodeSite.Send( '|data|', |data| );|end| ]]>
+    </code>
+  </template>
+</codetemplate>

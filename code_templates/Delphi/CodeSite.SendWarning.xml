@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<codetemplate xmlns="http://schemas.borland.com/Delphi/2005/codetemplates" version="1.0.0">
+
+  <template name="csw" invoke="manual">
+    <description>
+      CodeSite.SendWarning(...)
+    </description>
+    <author>
+      Raize Software
+    </author>
+
+    <point name="msg">
+      <text>
+        msg
+      </text>
+      <hint>
+        Warning Message
+      </hint>
+    </point>
+
+    <code language="Delphi" context="methodbody" delimiter="|">
+      <![CDATA[CodeSite.SendWarning( '|msg|' );|end| ]]>
+    </code>
+  </template>
+</codetemplate>
