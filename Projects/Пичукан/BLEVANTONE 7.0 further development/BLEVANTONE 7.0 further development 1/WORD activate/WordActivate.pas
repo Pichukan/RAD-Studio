@@ -61,11 +61,11 @@ type
 var
   Form1: TForm1;
 
-  WRD,Book,BookPicture,BookAnalogiCoInvest,BookZad,RangeBookZad,BookObzor,BookObzorRF, BookObzorRegion, BookObzorObj, BookAnalog,BookAnalogBuild,BookLocation,BookFoto,
+  WRD,Book,BookPicture,BookAnalogiCoInvest,BookZad,RangeBookZad,BookObzor,BookObzorRec,BookObzorDoci,BookObzorRF, BookObzorRegion, BookObzorObj, BookAnalog,BookAnalogBuild,BookLocation,BookFoto,
       BookBlevantone,RangeBookBlevantone,wdInlineShapes,wdInlineShapes2: OleVariant;
   EXC,MyBook,MyWorkSheet,MyWorkSheet2,MyRange,MyRange2,RangeObzor,RangeObzorObj,
       Shp,ShpWrd,ShpWrd2,ShpWrd3,vstart,vend: OleVariant;
-  var W,ObzorValue,ObzorValueObj,ObzorValueRF, ObzorValueRegion :variant;
+  var W,ObzorValue,ObzorValueObj,ObzorValueRF, ObzorValueDoci, ObzorValueRec,ObzorValueRegion :variant;
                  i:Integer;
         LengthDir : Integer;
         ProgBar   : Integer;
@@ -705,7 +705,7 @@ end;
     //ShowMessage(vartostr(ObzorValue));
 
         DefaultReadIniFileObj := 'Z:\GRAND NEVA\2014\ОБЗОРЫ районыZ\';   //Значение директории обзора по умолчанию
-        DirObzorObj:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [4,2], 'стринговая заглушка')+ObzorValueObj+' .docx';
+        DirObzorObj:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [4,2], 'стринговая заглушка')+ObzorValueObj+'.docx';
 
      //ShowMessage(DirObzorObj);
 
@@ -766,11 +766,11 @@ end;
     //ShowMessage(vartostr(ObzorValue));
 
         DefaultReadIniFileRF := 'Z:\GRAND NEVA\2014\ОБЗОРЫ районыZ\';   //Значение директории обзора по умолчанию
-        DirObzorRF:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [5,2], 'стринговая заглушка')+ObzorValueRF+' .docx';
+        DirObzorRF:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [5,2], 'стринговая заглушка')+ObzorValueRF+'.docx';
 
 
         DefaultReadIniFileRegion := 'Z:\GRAND NEVA\2014\ОБЗОРЫ районыZ\';   //Значение директории обзора по умолчанию
-        DirObzorRegion:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [6,2], 'стринговая заглушка')+ObzorValueRegion+' .docx';
+        DirObzorRegion:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [6,2], 'стринговая заглушка')+ObzorValueRegion+'.docx';
 
      //ShowMessage(DirObzorObj);
 
@@ -842,10 +842,124 @@ end;
  end;
 
 
+                            //*
+                       //   *****
+                       //************
+                    //*******************
+
+
+//**** Процедура ищет из файла ini путь к докам ЧПО или ООО (страховка, квалаттестат и др. *****
+//**** открывает документ WORD с документами (страх, квал и др) по заданной директрии       *****
+//**** и вставляет в документ WORD отчета                            *****
+ procedure InsertDociOcen();
+ var
+    DirDoci,ReplaceTextDoci : string;
+    DefaultReadIniFileDoci        : string;
+
+ begin
+     // MyWorkSheet2:=MyBook.Sheets['Ввод'];
+     // RangeObzorObj:=MyWorkSheet2.Range['c3'];
+      ObzorValueDoci:= 'ЧПО Пичукан';
+
+    //ShowMessage(vartostr(ObzorValue));
+
+        DefaultReadIniFileDoci := 'Z:\GRAND NEVA\2014\ОБЗОРЫ районыZ\';   //Значение директории обзора по умолчанию
+        DirDoci:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [7,2], 'стринговая заглушка');
+
+     //ShowMessage(DirObzorObj);
+
+      try
+      BookObzorDoci:=WRD.Documents.Open(DirDoci);
+      except
+
+         ShowMessage('BLEVANTONE не смог открыть файл с документами.'+
+       ' Пожалуйста укажите расположение документа с документами '+
+        ObzorValueDoci+' ну или, если нет, любого другого ;)');
+
+        if not Form1.OpenDialog1.Execute then Exit;  //тут открывается диалог выбора файла, и если пользователь нажал "Cancel", то выходим
+
+          DirDoci := Form1.OpenDialog1.FileName;
+          BookObzorDoci:=WRD.Documents.Open(DirDoci);
+
+         //******* Определение и запись в INI файл директории папки с обзорами *****
+
+         IniSectionValue [7,3]:= DirDoci;  //нет отсечения имени файла с обзором района от пути
+         IniFile.WriteString(IniSectionValue [1,1], IniSectionValue [7,2], IniSectionValue [7,3]);
+
+      end;
+
+      BookObzorDoci.Range.Copy;
+      ReplaceTextDoci:='10###doc';
+      MyRange2 := FindInDoc(Book, ReplaceTextDoci);
+
+         if VarIsClear(MyRange2) then begin
+            ShowMessage('Текст 10###doc ReplaceTextDoci НЕ найден.');
+            Exit;
+         end;
+
+  MyRange2.Paste;
+ end;
 
 
 
 
+ //*
+                       //   *****  222
+                       //************
+                    //*******************
+
+
+//**** Процедура ищет из файла ini путь к докам ЧПО или ООО (страховка, квалаттестат и др. *****
+//**** открывает документ WORD с документами (страх, квал и др) по заданной директрии       *****
+//**** и вставляет в документ WORD отчета                            *****
+ procedure InsertDociRec();
+ var
+    DirRec,ReplaceTextRec : string;
+    DefaultReadIniFileRec        : string;
+
+ begin
+     // MyWorkSheet2:=MyBook.Sheets['Ввод'];
+     // RangeObzorObj:=MyWorkSheet2.Range['c3'];
+      ObzorValueRec:= 'ЧПО Пичукан реквизты';
+
+    //ShowMessage(vartostr(ObzorValue));
+
+        DefaultReadIniFileRec := 'Z:\GRAND NEVA\2014\ОБЗОРЫ районыZ\';   //Значение директории обзора по умолчанию
+        DirRec:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [8,2], 'стринговая заглушка');
+
+     //ShowMessage(DirObzorObj);
+
+      try
+      BookObzorRec:=WRD.Documents.Open(DirRec);
+      except
+
+         ShowMessage('BLEVANTONE не смог открыть файл с реквизитами оценщика.'+
+       ' Пожалуйста укажите расположение документа с реквизитами '+
+        ObzorValueRec+' ну или, если нет, любого другого ;)');
+
+        if not Form1.OpenDialog1.Execute then Exit;  //тут открывается диалог выбора файла, и если пользователь нажал "Cancel", то выходим
+
+          DirRec := Form1.OpenDialog1.FileName;
+          BookObzorRec:=WRD.Documents.Open(DirRec);
+
+         //******* Определение и запись в INI файл директории папки с обзорами *****
+
+         IniSectionValue [8,3]:= DirRec;  //нет отсечения имени файла с обзором района от пути
+         IniFile.WriteString(IniSectionValue [1,1], IniSectionValue [8,2], IniSectionValue [8,3]);
+
+      end;
+
+      BookObzorRec.Range.Copy;
+      ReplaceTextRec:='11###rec';
+      MyRange2 := FindInDoc(Book, ReplaceTextRec);
+
+         if VarIsClear(MyRange2) then begin
+            ShowMessage('Текст 11###rec ReplaceTextRec НЕ найден.');
+            Exit;
+         end;
+
+  MyRange2.Paste;
+ end;
 
 
 
@@ -1144,6 +1258,8 @@ end;
     BookObzorObj.Close;
     BookObzorRF.Close;
     BookObzorRegion.Close;
+    BookObzorDoci.Close;
+    BookObzorRec.Close();
     BookPicture.Close;
     BookFoto.Close;
    end;
@@ -1296,10 +1412,23 @@ begin
     Label2C:='обзор RF и Region вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
 
+    InsertDociOcen();
+
+    ProgBar:=69;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='доки оценочные вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
+     InsertDociRec();
+
+    ProgBar:=71;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='реквизиты оценочные вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
 
      CloseExcel;
 
-     ProgBar:=71;
+     ProgBar:=73;
     ProgressBar1.Position := ProgBar ;
     Label2C:='закрыт EXCEL, начинаю вставлять аналоги';
     Form1.Label2.Caption:=Label2C;
@@ -1602,10 +1731,17 @@ begin
     Label2C:='обзор RF и Region вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
 
+    InsertDociOcen();
+
+    ProgBar:=69;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='доки оценочные вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
 
      CloseExcel;
 
-     ProgBar:=69;
+     ProgBar:=72;
     ProgressBar1.Position := ProgBar ;
     Label2C:='закрыт EXCEL, начинаю вставлять аналоги';
     Form1.Label2.Caption:=Label2C;
@@ -1764,6 +1900,13 @@ begin
      ProgBar:=63;
     ProgressBar1.Position := ProgBar ;
     Label2C:='обзор RF и Region вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
+    InsertDociOcen();
+
+    ProgBar:=65;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='доки оценочные вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
 
 
@@ -2198,6 +2341,10 @@ end;
     IniSectionValue [5,3]:= 'Z:\GRAND NEVA\2014\ОБЗОР РФ\';
     IniSectionValue [6,2]:= 'REGION OBZOR Location';
     IniSectionValue [6,3]:= 'Z:\GRAND NEVA\2014\ОБЗОР регион\';
+    IniSectionValue [7,2]:= 'DOCI Ocenschik Location';
+    IniSectionValue [7,3]:= 'Z:\GRAND NEVA\2014\доки оценщика\';
+    IniSectionValue [8,2]:= 'Recvizity Ocenschik Location';
+    IniSectionValue [8,3]:= 'Z:\GRAND NEVA\2014\доки оценщика\';
   end;
 
 
