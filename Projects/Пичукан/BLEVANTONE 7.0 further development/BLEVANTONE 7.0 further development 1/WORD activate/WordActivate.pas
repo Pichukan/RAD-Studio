@@ -61,11 +61,11 @@ type
 var
   Form1: TForm1;
 
-  WRD,Book,BookPicture,BookAnalogiCoInvest,BookZad,RangeBookZad,BookObzor,BookAnalog,BookAnalogBuild,BookLocation,BookFoto,
+  WRD,Book,BookPicture,BookAnalogiCoInvest,BookZad,RangeBookZad,BookObzor,BookObzorRF, BookObzorRegion, BookObzorObj, BookAnalog,BookAnalogBuild,BookLocation,BookFoto,
       BookBlevantone,RangeBookBlevantone,wdInlineShapes,wdInlineShapes2: OleVariant;
-  EXC,MyBook,MyWorkSheet,MyWorkSheet2,MyRange,MyRange2,RangeObzor,
+  EXC,MyBook,MyWorkSheet,MyWorkSheet2,MyRange,MyRange2,RangeObzor,RangeObzorObj,
       Shp,ShpWrd,ShpWrd2,ShpWrd3,vstart,vend: OleVariant;
-  var W,ObzorValue:variant;
+  var W,ObzorValue,ObzorValueObj,ObzorValueRF, ObzorValueRegion :variant;
                  i:Integer;
         LengthDir : Integer;
         ProgBar   : Integer;
@@ -357,7 +357,7 @@ begin
 end;
 
 
-//**********              ДЛЯ КВАРТИР, КОМНАТ, ЗУ, ТАУХАУЗОВ                  ***********
+//**********              ДЛЯ КВАРТИР, КОМНАТ, ЗУ, ТАУНХАУЗОВ                  ***********
 //********** Процедура запускает МАКРОС EXCEL копирующий таблицы как рисунки  ***********
 //********** на листе EXCEL и вставляющий их там же, и затем процедура эти    ***********
 //********** рисунки вставляет в документ WORD на заданные места путем замены ***********
@@ -633,9 +633,11 @@ begin
 
 end;
 
+
 //**** Процедура ищет из таблицы EXCEL название района               *****
 //**** открывает документ WORD с обзором по заданной директрии       *****
 //**** и вставляет в документ WORD отчета                            *****
+
  procedure InsertObzor();
  var
     DirObzor,ReplaceTextObzor : string;
@@ -649,7 +651,9 @@ end;
     //ShowMessage(vartostr(ObzorValue));
 
         DefaultReadIniFile := 'Z:\GRAND NEVA\2014\ОБЗОРЫ районыZ\';   //Значение директории обзора по умолчанию
-        DirObzor:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [1,2], DefaultReadIniFile)+ObzorValue+' район.docx';
+        DirObzor:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [1,2],'Заглушка по факту стринговая')+ObzorValue+' район.docx';
+
+     //ShowMessage(DirObzor);
 
       try
       BookObzor:=WRD.Documents.Open(DirObzor);
@@ -682,6 +686,172 @@ end;
 
   MyRange2.Paste;
  end;
+
+
+
+//**** Процедура ищет из таблицы EXCEL название объекта оценки  obj             *****
+//**** открывает документ WORD с обзором объектов по заданной директрии       *****
+//**** и вставляет в документ WORD отчета                            *****
+ procedure InsertObzorObj();
+ var
+    DirObzorObj,ReplaceTextObzorObj : string;
+    DefaultReadIniFileObj        : string;
+
+ begin
+      MyWorkSheet2:=MyBook.Sheets['Ввод'];
+      RangeObzorObj:=MyWorkSheet2.Range['c3'];
+      ObzorValueObj:= RangeObzorObj.Value;
+
+    //ShowMessage(vartostr(ObzorValue));
+
+        DefaultReadIniFileObj := 'Z:\GRAND NEVA\2014\ОБЗОРЫ районыZ\';   //Значение директории обзора по умолчанию
+        DirObzorObj:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [4,2], 'стринговая заглушка')+ObzorValueObj+' .docx';
+
+     //ShowMessage(DirObzorObj);
+
+      try
+      BookObzorObj:=WRD.Documents.Open(DirObzorObj);
+      except
+
+         ShowMessage('BLEVANTONE не смог открыть файл с обзором объекта.'+
+       ' Пожалуйста укажите расположение документа с обзором обьекта '+
+        ObzorValueObj+' ну или, если нет, любого другого ;)');
+
+        if not Form1.OpenDialog1.Execute then Exit;  //тут открывается диалог выбора файла, и если пользователь нажал "Cancel", то выходим
+
+          DirObzorObj := Form1.OpenDialog1.FileName;
+          BookObzorObj:=WRD.Documents.Open(DirObzorObj);
+
+         //******* Определение и запись в INI файл директории папки с обзорами *****
+
+         IniSectionValue [4,3]:= DIRFileDetect2(DirObzorObj);  //отсечение имени файла с обзором района от пути
+         IniFile.WriteString(IniSectionValue [1,1], IniSectionValue [4,2], IniSectionValue [4,3]);
+
+      end;
+
+      BookObzorObj.Range.Copy;
+      ReplaceTextObzorObj:='7###obj';
+      MyRange2 := FindInDoc(Book, ReplaceTextObzorObj);
+
+         if VarIsClear(MyRange2) then begin
+            ShowMessage('Текст 7###obj ReplaceTextObzorObj НЕ найден.');
+            Exit;
+         end;
+
+  MyRange2.Paste;
+ end;
+
+
+
+
+
+                              //********
+
+
+//**** Процедура ищет из таблицы EXCEL название объекта оценки  obj             *****
+//**** открывает документ WORD с обзором объектов по заданной директрии       *****
+//**** и вставляет в документ WORD отчета                            *****
+ procedure InsertObzorRFandRegion();
+ var
+    DirObzorRF, DirObzorRegion, ReplaceTextObzorRF : string;
+    ReplaceTextObzorRegion : string;
+    DefaultReadIniFileRF,DefaultReadIniFileRegion         : string;
+
+ begin
+     // MyWorkSheet2:=MyBook.Sheets['Ввод'];
+     // RangeObzorObj:=MyWorkSheet2.Range['c3'];
+      ObzorValueRF:= 'обзор рф';
+      ObzorValueRegion:= 'обзор регион';
+
+    //ShowMessage(vartostr(ObzorValue));
+
+        DefaultReadIniFileRF := 'Z:\GRAND NEVA\2014\ОБЗОРЫ районыZ\';   //Значение директории обзора по умолчанию
+        DirObzorRF:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [5,2], 'стринговая заглушка')+ObzorValueRF+' .docx';
+
+
+        DefaultReadIniFileRegion := 'Z:\GRAND NEVA\2014\ОБЗОРЫ районыZ\';   //Значение директории обзора по умолчанию
+        DirObzorRegion:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [6,2], 'стринговая заглушка')+ObzorValueRegion+' .docx';
+
+     //ShowMessage(DirObzorObj);
+
+      try
+      BookObzorRF:=WRD.Documents.Open(DirObzorRF);
+      except
+
+         ShowMessage('BLEVANTONE не смог открыть файл с обзором RF.'+
+       ' Пожалуйста укажите расположение документа с обзором RF '+
+        ObzorValueRF+' ну или, если нет, любого другого ;)');
+
+        if not Form1.OpenDialog1.Execute then Exit;  //тут открывается диалог выбора файла, и если пользователь нажал "Cancel", то выходим
+
+          DirObzorRF := Form1.OpenDialog1.FileName;
+          BookObzorRF:=WRD.Documents.Open(DirObzorRF);
+
+         //******* Определение и запись в INI файл директории папки с обзорами *****
+
+         IniSectionValue [5,3]:= DIRFileDetect2(DirObzorRF);  //отсечение имени файла с обзором района от пути
+         IniFile.WriteString(IniSectionValue [1,1], IniSectionValue [5,2], IniSectionValue [5,3]);
+
+      end;
+
+
+
+      try
+      BookObzorRegion:=WRD.Documents.Open(DirObzorRegion);
+      except
+
+         ShowMessage('BLEVANTONE не смог открыть файл с обзором Region.'+
+       ' Пожалуйста укажите расположение документа с обзором Region '+
+        ObzorValueRegion+' ну или, если нет, любого другого ;)');
+
+        if not Form1.OpenDialog1.Execute then Exit;  //тут открывается диалог выбора файла, и если пользователь нажал "Cancel", то выходим
+
+          DirObzorRegion := Form1.OpenDialog1.FileName;
+          BookObzorRegion:=WRD.Documents.Open(DirObzorRegion);
+
+         //******* Определение и запись в INI файл директории папки с обзорами *****
+
+         IniSectionValue [6,3]:= DIRFileDetect2(DirObzorRegion);  //отсечение имени файла с обзором района от пути
+         IniFile.WriteString(IniSectionValue [1,1], IniSectionValue [6,2], IniSectionValue [6,3]);
+
+      end;
+
+
+      BookObzorRF.Range.Copy;
+      ReplaceTextObzorRF:='8###rf';
+      MyRange2 := FindInDoc(Book, ReplaceTextObzorRF);
+
+         if VarIsClear(MyRange2) then begin
+            ShowMessage('Текст 8###rf ReplaceTextObzorRF НЕ найден.');
+            Exit;
+         end;
+
+  MyRange2.Paste;
+
+
+  BookObzorRegion.Range.Copy;
+      ReplaceTextObzorRegion:='9###reg';
+      MyRange2 := FindInDoc(Book, ReplaceTextObzorRegion);
+
+         if VarIsClear(MyRange2) then begin
+            ShowMessage('Текст 9###reg ReplaceTextObzorRegion НЕ найден.');
+            Exit;
+         end;
+
+  MyRange2.Paste;
+ end;
+
+
+
+
+
+
+
+
+
+
+
+
 
   //***       Аналоги для квартир, комнат, ЗУ, таунхаузов         ***
  //**** Процедура вставляет рисунки аналогов из документа WORD    ****
@@ -971,6 +1141,9 @@ end;
     BookLocation.Close;
     BookAnalog.Close;
     BookObzor.Close;
+    BookObzorObj.Close;
+    BookObzorRF.Close;
+    BookObzorRegion.Close;
     BookPicture.Close;
     BookFoto.Close;
    end;
@@ -1097,21 +1270,36 @@ begin
 
     InsertPictureWord(Book);
 
-     ProgBar:=58;
+     ProgBar:=50;
     ProgressBar1.Position := ProgBar ;
     Label2C:='акт, доки, задание вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
 
     InsertObzor() ;
 
-      ProgBar:=65;
+      ProgBar:=55;
     ProgressBar1.Position := ProgBar ;
     Label2C:='обзор района вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
 
+     InsertObzorObj() ;
+
+      ProgBar:=60;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='обзор obj вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
+     InsertObzorRFandRegion();
+
+     ProgBar:=67;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='обзор RF и Region вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
+
      CloseExcel;
 
-     ProgBar:=69;
+     ProgBar:=71;
     ProgressBar1.Position := ProgBar ;
     Label2C:='закрыт EXCEL, начинаю вставлять аналоги';
     Form1.Label2.Caption:=Label2C;
@@ -1388,17 +1576,32 @@ begin
 
     InsertPictureWord(Book);
 
-     ProgBar:=58;
+     ProgBar:=45;
     ProgressBar1.Position := ProgBar ;
     Label2C:='акт, доки, задание вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
 
     InsertObzor() ;
 
-      ProgBar:=65;
+      ProgBar:=50;
     ProgressBar1.Position := ProgBar ;
     Label2C:='обзор района вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
+
+     InsertObzorObj() ;
+
+      ProgBar:=58;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='обзор obj вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
+    InsertObzorRFandRegion();
+
+     ProgBar:=62;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='обзор RF и Region вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
 
      CloseExcel;
 
@@ -1537,17 +1740,32 @@ begin
 
     InsertPictureWord(Book);
 
-     ProgBar:=58;
+     ProgBar:=48;
     ProgressBar1.Position := ProgBar ;
     Label2C:='акт, доки, задание вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
 
     InsertObzor() ;
 
-      ProgBar:=65;
+      ProgBar:=55;
     ProgressBar1.Position := ProgBar ;
     Label2C:='обзор района вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
+
+     InsertObzorObj() ;
+
+      ProgBar:=58;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='обзор obj вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
+    InsertObzorRFandRegion();
+
+     ProgBar:=63;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='обзор RF и Region вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
 
      CloseExcel;
 
@@ -1930,6 +2148,7 @@ end;
      KeyCryptDisc1 := GetHardDiskSerial('c');
      KeyCryptDisc2 := EnCrypt (KeyCryptDisc1);
      KeyCryptDisc3 := IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [2,2], IniSectionValue [2,3]);
+     //showMessage(KeyCryptDisc3);
      if KeyCryptDisc2 = KeyCryptDisc3
       then
 
@@ -1973,7 +2192,12 @@ end;
     //******************* For Crypt Information **********************************
     IniSectionValue [2,2]:= 'Capasity Data';
     IniSectionValue [2,3]:= 'shhhdbbdb56';
-
+    IniSectionValue [4,2]:= 'Object OBZOR Location';
+    IniSectionValue [4,3]:= 'Z:\GRAND NEVA\2014\ОБЗОРЫ районы\';
+    IniSectionValue [5,2]:= 'RF OBZOR Location';
+    IniSectionValue [5,3]:= 'Z:\GRAND NEVA\2014\ОБЗОР РФ\';
+    IniSectionValue [6,2]:= 'REGION OBZOR Location';
+    IniSectionValue [6,3]:= 'Z:\GRAND NEVA\2014\ОБЗОР регион\';
   end;
 
 
