@@ -1738,10 +1738,16 @@ begin
     Label2C:='доки оценочные вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
 
+     InsertDociRec();
+
+    ProgBar:=71;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='реквизиты оценочные вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
 
      CloseExcel;
 
-     ProgBar:=72;
+     ProgBar:=73;
     ProgressBar1.Position := ProgBar ;
     Label2C:='закрыт EXCEL, начинаю вставлять аналоги';
     Form1.Label2.Caption:=Label2C;
@@ -1904,15 +1910,21 @@ begin
 
     InsertDociOcen();
 
-    ProgBar:=65;
+    ProgBar:=69;
     ProgressBar1.Position := ProgBar ;
     Label2C:='доки оценочные вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
 
+     InsertDociRec();
+
+    ProgBar:=71;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='реквизиты оценочные вставлены в WORD документ';
+    Form1.Label2.Caption:=Label2C;
 
      CloseExcel;
 
-     ProgBar:=69;
+     ProgBar:=73;
     ProgressBar1.Position := ProgBar ;
     Label2C:='закрыт EXCEL, начинаю вставлять аналоги';
     Form1.Label2.Caption:=Label2C;
@@ -2352,7 +2364,7 @@ end;
  //*********************** MAIN PROGRAMM *******************************************************
 
 begin
-   ProgramName:='Blevantone 8.0 local crypt improve';
+   ProgramName:='Blevantone 9.0 dev';
 
 
    ProgBar:=0;
