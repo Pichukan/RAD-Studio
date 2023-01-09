@@ -2364,7 +2364,7 @@ end;
  //*********************** MAIN PROGRAMM *******************************************************
 
 begin
-   ProgramName:='Blevantone 9.0 dev';
+   ProgramName:='Blevantone 9.1 dev';
 
 
    ProgBar:=0;
