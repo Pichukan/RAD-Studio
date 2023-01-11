@@ -1259,7 +1259,7 @@ end;
     BookObzorRF.Close;
     BookObzorRegion.Close;
     BookObzorDoci.Close;
-    BookObzorRec.Close();
+    BookObzorRec.Close;
     BookPicture.Close;
     BookFoto.Close;
    end;
