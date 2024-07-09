@@ -540,7 +540,8 @@ procedure TableAsPicturePasteBuildLand(Book : OleVariant);
 //******* Процедура вставляет  рисунки из документа WORD   ********
 //******* в другой документ в заданные места               ********
 //******* (в данном случае это Зад. и Акт осмотра          ********
-procedure InsertPictureWord(Book : OleVariant);
+//procedure InsertPictureWord(Book : OleVariant);
+ procedure InsertPictureWord();
  var
  ReplaceText   : array [1..5] of string;
  ReplaceTextValue : string;
@@ -567,7 +568,11 @@ begin
       3 : ShowMessage('В доках не хватает сканов документов и акта осмотра');
       4 : ShowMessage('В доках нет сканов документов');
      end;
-   if j=0  then   Exit;
+   if j=0  then   begin
+                      BookPicture.Close;
+                      Exit;
+   end;
+
 
 
 
@@ -594,6 +599,7 @@ begin
 
          if  VarIsClear(MyRange2) then begin
              ShowMessage('Текст в документе;'+ReplaceTextValue+' НЕ найден.');
+             BookPicture.Close;
              Exit;
          end;
 
@@ -631,7 +637,7 @@ begin
 
        end;
 
-
+       BookPicture.Close
 
 
 end;
@@ -923,7 +929,7 @@ end;
  begin
      // MyWorkSheet2:=MyBook.Sheets['Ввод'];
      // RangeObzorObj:=MyWorkSheet2.Range['c3'];
-      ObzorValueRec:= 'ЧПО Пичукан реквизты';
+      ObzorValueRec:= 'ЧПО Пичукан реквизиты';
 
     //ShowMessage(vartostr(ObzorValue));
 
@@ -1511,11 +1517,21 @@ end;
     BookObzorObj.Close;
     BookObzorRF.Close;
     BookObzorRegion.Close;
+    //ShowMessage('BookObzorRegion.Close;');
     BookObzorDoci.Close;
-    BookObzorRec.Close();
+    //ShowMessage('BookObzorDoci.Close;');
+    BookObzorRec.Close;
 
-    BookPicture.Close;
+    //ShowMessage('BookObzorDoci.Close;');
     BookFoto.Close;
+
+    //ShowMessage('BookFoto.Close();');
+    //BookPicture.Close;    Закрываем в самой подпрограмме, так как
+    //                      если закрывать здесь то начинает выдавать
+    //                      ошибку, по ходу Эмбаркадеро фиксит то, что
+    //                      Экзель закрыт а картинки берутся оттуда
+    //                      ну типа ссылка пропала. Если нет образения к
+    //                      стороннему обьекту то этого говна нет.
    end;
 
  //**** Процедура закрывает документ EXCEL
@@ -1630,6 +1646,7 @@ begin
       ProgBar:=17;
     ProgressBar1.Position := ProgBar ;
 
+    //TableAsPicturePaste(Book);
     TableAsPicturePaste(Book);
 
      ProgBar:=33;
@@ -1638,12 +1655,15 @@ begin
     Form1.Label2.Caption:=Label2C;
 
 
-    InsertPictureWord(Book);
+    //InsertPictureWord(Book);
+      InsertPictureWord();
 
      ProgBar:=40;
     ProgressBar1.Position := ProgBar ;
     Label2C:='акт, доки, задание вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
+
+    //BookPicture.Close;
 
     InsertObzor() ;
 
@@ -2002,7 +2022,8 @@ begin
     Form1.Label2.Caption:=Label2C;
   }
 
-    InsertPictureWord(Book);
+    //InsertPictureWord(Book);
+    InsertPictureWord();
 
      ProgBar:=45;
     ProgressBar1.Position := ProgBar ;
@@ -2179,7 +2200,8 @@ begin
     Form1.Label2.Caption:=Label2C;
 
 
-    InsertPictureWord(Book);
+    //InsertPictureWord(Book);
+    InsertPictureWord();
 
      ProgBar:=48;
     ProgressBar1.Position := ProgBar ;

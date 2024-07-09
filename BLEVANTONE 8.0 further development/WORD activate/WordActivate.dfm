@@ -12,8 +12,6 @@ object Form1: TForm1
   Font.Name = 'Bookman Old Style'
   Font.Style = [fsBold]
   Menu = MainMenu1
-  OldCreateOrder = False
-  PixelsPerInch = 96
   TextHeight = 19
   object Label1: TLabel
     Left = 96
