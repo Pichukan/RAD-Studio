@@ -62,12 +62,12 @@ var
   Form1: TForm1;
 
   WRD,Book,BookPicture,BookAnalogiCoInvest,BookZad,RangeBookZad,BookObzor,BookObzorRec,BookObzorDoci,BookObzorRF,
-      BookObzorRegion, BookObzorObj, BookObzorFco, BookObzorOgr, BookObzorDop, BookObzorTerm,
+      BookObzorRegion, BookObzorObj, BookObzorFco, BookObzorOgr, BookObzorDop, BookObzorTerm, BookObzorLit,
       BookAnalog,BookAnalogBuild,BookLocation,BookFoto,
       BookBlevantone,RangeBookBlevantone,wdInlineShapes,wdInlineShapes2: OleVariant;
   EXC,MyBook,MyWorkSheet,MyWorkSheet2,MyRange,MyRange2,RangeObzor,RangeObzorObj,
       Shp,ShpWrd,ShpWrd2,ShpWrd3,vstart,vend: OleVariant;
-  var W,ObzorValue,ObzorValueObj,ObzorValueRF, ObzorValueDoci, ObzorValueRec, ObzorValueRegion,
+  var W,ObzorValue,ObzorValueObj,ObzorValueRF, ObzorValueDoci, ObzorValueLit,ObzorValueRec, ObzorValueRegion,
       ObzorValueFco, ObzorValueOgr, ObzorValueDop, ObzorValueTerm :variant;
                  i:Integer;
         LengthDir : Integer;
@@ -500,6 +500,8 @@ procedure TableAsPicturePasteBuildLand(Book : OleVariant);
   end;
 
 
+ //***************ВСТАВКА РИСУНКОВ АКТ ОСМОТРА И ЗАДАНИЕ ИЗ EXCEL В ЗАДАКТ*********************************************************************
+
 
  //******* Процедура вставляет  рисунки акт осмотра и задание из документа EXCEL   ********
 //******* в документ в WORD   под названием задакт            ********
@@ -534,7 +536,7 @@ procedure TableAsPicturePasteBuildLand(Book : OleVariant);
 
 
 
-
+//************ВСТАВКА ИЗ ДОКИ В ОТЧЕТ WORD*****************************************
 
 
 //******* Процедура вставляет  рисунки из документа WORD   ********
@@ -643,6 +645,9 @@ begin
 end;
 
 
+
+//********************ВСТАВЛЯЕТ РАЙОН ПО НАЗВАНИЮ В EXCEL В ОТЧЕТ WORD**************************************************************************
+
 //**** Процедура ищет из таблицы EXCEL название района               *****
 //**** открывает документ WORD с обзором по заданной директрии       *****
 //**** и вставляет в документ WORD отчета                            *****
@@ -697,6 +702,8 @@ end;
  end;
 
 
+
+ //*********************ВСТАВЛЯЕТ ОБЗОР ОБЬЕКТА ПО НАЗВАНИЮ В EXCEL В ОТЧЕТ WORD************************************
 
 //**** Процедура ищет из таблицы EXCEL название объекта оценки  obj             *****
 //**** открывает документ WORD с обзором объектов по заданной директрии       *****
@@ -754,7 +761,7 @@ end;
 
 
 
-                              //********
+//********************ВСТАВЛЯЕТ ОБЗОР РФ И РЕГИОН В ОТЧЕТ WORD******************************************************
 
 
 //**** Процедура ищет из таблицы EXCEL название объекта оценки  obj             *****
@@ -851,10 +858,8 @@ end;
  end;
 
 
-                            //*
-                       //   *****
-                       //************
-                    //*******************
+
+//*****************ДОКУМЕНТЫ ОЦЕНОЧНЫЕ СКАНЫ ВСТАВЛЯЕТ В ОТЧЕТ WORD******************************************
 
 
 //**** Процедура ищет из файла ini путь к докам ЧПО или ООО (страховка, квалаттестат и др. *****
@@ -912,11 +917,9 @@ end;
 
 
 
- //*
-                       //   *****  222
-                       //************
-                    //*******************
 
+
+ //****************ВСТАВЛЯЕТ В ОТЧЕТ РЕКВИЗИТЫ ОЦЕНОЧНЫЕ**********************************************************
 
 //**** Процедура ищет из файла ini путь к докам ЧПО или ООО (страховка, квалаттестат и др. *****
 //**** открывает документ WORD с документами (страх, квал и др) по заданной директрии       *****
@@ -972,10 +975,8 @@ end;
 
 
 
- //************************************************************************************************************************
 
-
-
+ //****************ВСТАВЛЯЕТ ФСО И РЕГЛАМЕНТНЫЕ В ОТЧЕТ WORD********************************************************************************************************
 
 
 //**** Процедура ищет из файла ini путь к документу с Федеральными стандартами оценки (законодательство) *****
@@ -1019,6 +1020,9 @@ end;
       end;
 
       BookObzorFco.Range.Copy;
+
+     // ShowMessage('ФСО в буфере обменга');
+
       ReplaceTextFco:='ФСО###';
       MyRange2 := FindInDoc(Book, ReplaceTextFco);
 
@@ -1028,16 +1032,80 @@ end;
          end;
 
   MyRange2.Paste;
+
+  //ShowMessage('MyRange2 ФСО значение');
+
  end;
 
 
 
 
 
+//********************ВСТАВЛЯЕТ СПИСОК ЛИТЕРАТУРЫ В ОТЧЕТ WORD*********************************************************************************************
+
+
+//**** Процедура ищет из файла ini путь к документу со списком используемой литературы *****
+//**** открывает документ WORD с списком литературы по заданной директрии              *****
+//**** и вставляет в документ WORD отчета на заданное место по метке                   *****
+ procedure InsertLit();
+ var
+    DirLit,ReplaceTextLit : string;
+    DefaultReadIniFileLit        : string;
+
+ begin
+     // MyWorkSheet2:=MyBook.Sheets['Ввод'];
+     // RangeObzorObj:=MyWorkSheet2.Range['c3'];
+      ObzorValueLit:= 'литература';
+
+    //ShowMessage(vartostr(ObzorValue));
+
+        DefaultReadIniFileLit := 'Z:\GRAND NEVA\2014\ЛИТЕРАТУРА\';   //Значение директории обзора по умолчанию
+        DirLit:= IniFile.ReadString(IniSectionValue [1,1], IniSectionValue [13,2], 'стринговая заглушка');
+
+     //ShowMessage(DirObzorObj);
+
+      try
+      BookObzorLit:=WRD.Documents.Open(DirLit);
+      except
+
+         ShowMessage('BLEVANTONE не смог открыть файл с литературой.'+
+       ' Пожалуйста укажите расположение документа с литературой '+
+        ObzorValueLit+' ну или, если нет, любого другого ;)');
+
+        if not Form1.OpenDialog1.Execute then Exit;  //тут открывается диалог выбора файла, и если пользователь нажал "Cancel", то выходим
+
+          DirLit := Form1.OpenDialog1.FileName;
+          BookObzorLit:=WRD.Documents.Open(DirLit);
+
+         //******* Определение и запись в INI файл директории папки с обзорами *****
+
+         IniSectionValue [13,3]:= DirLit;  //нет отсечения имени файла с обзором района от пути
+         IniFile.WriteString(IniSectionValue [1,1], IniSectionValue [13,2], IniSectionValue [13,3]);
+
+      end;
+
+      BookObzorLit.Range.Copy;
+
+     // ShowMessage('литература в буфере обменга');
+
+      ReplaceTextLit:='литер###';
+      MyRange2 := FindInDoc(Book, ReplaceTextLit);
+
+         if VarIsClear(MyRange2) then begin
+            ShowMessage('Текст литер### в ReplaceTextLit НЕ найден.');
+            Exit;
+         end;
+
+  MyRange2.Paste;
+
+  //ShowMessage('MyRange2 lit значение');
+
+ end;
 
 
 
 
+//********************ВСТАВЛЯЕТ ОГРАНИЧЕНИЯ И ПРЕДПОЛОЖЕНИЯ В ОТЧЕТ WORD*******************************************************************************************
 
 
 //**** Процедура ищет из файла ini путь к тексту по ограничениям и преположениям  *****
@@ -1095,7 +1163,7 @@ end;
 
 
 
-
+//***************ВСТАВЛЯЕТ ДОПУЩЕНИЯ В ОТЧЕТ WORD***********************************************************
 
 
 //**** Процедура ищет из файла ini путь к тексту по допущениям   *****
@@ -1154,8 +1222,7 @@ end;
 
 
 
-
-
+//**************ВСТАВЛЯЕТ ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ В ОТЧЕТ WORD*******************************************
 
 
 //**** Процедура ищет из файла ini путь к тексту по термины и определения   *****
@@ -1213,17 +1280,7 @@ end;
 
 
 
-
-
-
-
-
-
-
- //************************************************************************************************************************
-
-
-
+ //****************ВСТАВЛЯЕТ АНАЛОГИ В ОТЧЕТ WORD********************************************************************************************************
 
 
   //***       Аналоги для квартир, комнат, ЗУ, таунхаузов         ***
@@ -1313,6 +1370,10 @@ end;
 
  end;
 
+
+
+ //**************ВСТАВЛЯЕТ ЗДАНИЯ АНАЛОГИ В ОТЧЕТ WORD****************************************************
+
 //*******  Аналоги для здания из Ко Инвест справочника              *******
 //******* Процедура вставляет  аналоги здания Ко Инвест             ********
 //******* из документа WORD в другой документ в заданные места      ********
@@ -1363,6 +1424,9 @@ end;
 
 
 
+//*****************ВСТАВЛЯЕТ ФОТО ОБЬЕКТА ОЦЕНКИ В ОТЧЕТ WORD*******************************************
+
+
 //**** Процедура вставляет фото объекта оценки из документа WORD    ****
  //****                 в документ отчета                         ****
  procedure InsertFoto;
@@ -1394,6 +1458,9 @@ end;
 
  end;
 
+
+
+//**************ВСТАВЛЯЕТ РИСУНКИ МЕСТОПОЛОЖЕНИЯ В ОТЧЕТ WORD**********************************************
 
 
 //**** Процедура вставляет рисунки местоположения из документа WORD      ****
@@ -1454,7 +1521,7 @@ end;
   end;
 
 
- //**** Запуск макроса на слияние документа с таблицей EXCEL    ****
+ //**** Запуск макроса на слияние документа с таблицей EXCEL    ************************************
 
    procedure MacroSli;
 
@@ -1507,7 +1574,7 @@ end;
 
     end;
 
- //**** Процедура закрывает документы WORD кроме отчета
+ //**** Процедура закрывает документы WORD кроме отчета**************************************************
    procedure CloseWordDocs;
 
    begin
@@ -1718,7 +1785,7 @@ begin
 
     InsertTerm();
 
-     ProgBar:=69;
+     ProgBar:=68;
     ProgressBar1.Position := ProgBar ;
     Label2C:='термины и определения вставлены в WORD документ';
     Form1.Label2.Caption:=Label2C;
@@ -1726,7 +1793,14 @@ begin
     BookObzorTerm.Close();
 
 
+    InsertLit();
 
+     ProgBar:=69;
+    ProgressBar1.Position := ProgBar ;
+    Label2C:='литература вставлена в WORD документ';
+    Form1.Label2.Caption:=Label2C;
+
+    BookObzorLit.Close();
 
 
 
@@ -2686,7 +2760,8 @@ end;
     IniSectionValue [11,3]:= 'Z:\GRAND NEVA\2014\Dop\';
     IniSectionValue [12,2]:= 'Term Location';
     IniSectionValue [12,3]:= 'Z:\GRAND NEVA\2014\Term\';
-
+    IniSectionValue [13,2]:= 'Lit Location';
+    IniSectionValue [13,3]:= 'Z:\GRAND NEVA\2014\Literature\';
 
 
   end;
